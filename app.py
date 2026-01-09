@@ -33,11 +33,11 @@ with ratio_col1:
     ratio_value = st.number_input("薬用量/製剤量比", value=ratio_value_default, step=0.01, min_value=0.0)
 
 with ratio_col2:
-    unit_options = ["mg/g", "mg/mL", "%"]
+    unit_options = ["mg/g", "mg/mL", "%(g)", "%(mL)", "mg/錠"]
     try:
         default_index = unit_options.index(ratio_unit_value)
     except ValueError:
-        default_index = 0
+        default_index = 1  # デフォルトは mg/mL
     ratio_unit = st.radio("単位", unit_options, index=default_index, horizontal=True)
 
 total_dose = weight * dose_mg_kg
@@ -47,16 +47,21 @@ st.metric("必要投与量（薬用量）", f"{total_dose:.3f} mg")
 if total_dose > 0 and ratio_value > 0:
     # 単位に応じて製剤量を計算
     if ratio_unit == "mg/g":
-        # mg/gの場合：必要な製剤量(g) = 必要投与量(mg) / 薬用量/製剤量比(mg/g)
         required_preparation = total_dose / ratio_value
         st.metric("必要製剤量", f"{required_preparation:.3f} g")
     elif ratio_unit == "mg/mL":
-        # mg/mLの場合：必要な製剤量(mL) = 必要投与量(mg) / 薬用量/製剤量比(mg/mL)
         required_preparation = total_dose / ratio_value
         st.metric("必要製剤量", f"{required_preparation:.3f} mL")
-    elif ratio_unit == "%":
-        # %の場合：% = g/100mL = mg/100mL, つまり 1% = 10mg/mL
-        # 必要な製剤量(mL) = 必要投与量(mg) / (比率(%) * 10)
-        mg_per_ml = ratio_value * 10  # %をmg/mLに変換（1% = 10mg/mL）
+    elif ratio_unit == "%(g)":
+        # 1% = 10mg/g
+        mg_per_g = ratio_value * 10
+        required_preparation = total_dose / mg_per_g
+        st.metric("必要製剤量", f"{required_preparation:.3f} g")
+    elif ratio_unit == "%(mL)":
+        # 1% = 10mg/mL
+        mg_per_ml = ratio_value * 10
         required_preparation = total_dose / mg_per_ml
         st.metric("必要製剤量", f"{required_preparation:.3f} mL")
+    elif ratio_unit == "mg/錠":
+        required_preparation = total_dose / ratio_value
+        st.metric("必要製剤量", f"{required_preparation:.3f} 錠")
