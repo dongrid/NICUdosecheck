@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("👶 NICU Dose Check")
+st.title("👶 小児用量チェック")
 
 weight = st.number_input("体重 (kg)", value=1.0, step=0.1)
 
