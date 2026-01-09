@@ -2,7 +2,7 @@ import streamlit as st
 
 st.title("👶 小児用量チェック")
 
-weight = st.number_input("体重 (kg)", value=1.0, step=0.1)
+weight = st.number_input("体重 (kg)", value=10.0, step=1.0)
 
 # よく使う薬剤のショートカット
 st.subheader("よく使う薬剤")
