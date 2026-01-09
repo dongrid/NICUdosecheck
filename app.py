@@ -10,8 +10,10 @@ st.subheader("よく使う薬剤")
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("アドレナリン(0.01mg/kg)"):
+    if st.button("アドレナリン筋注(0.01mg/kg, アナフィラキシー用)"):
         st.session_state['dose_mg_kg'] = 0.01
+        st.session_state['ratio_unit'] = "mg/mL"
+        st.session_state['ratio_value'] = 1.0  # 1mg/1mL(1:1000)製剤
 
 with col2:
     if st.button("カルボシステイン(10mg/kg, 5%シロップ)"):
@@ -44,7 +46,7 @@ total_dose = weight * dose_mg_kg
 
 st.metric("必要投与量（薬用量）", f"{total_dose:.3f} mg")
 
-if total_dose > 0 and ratio_value > 0:
+if total_dose > 0.0 and ratio_value > 0:
     # 単位に応じて製剤量を計算
     if ratio_unit == "mg/g":
         required_preparation = total_dose / ratio_value
