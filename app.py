@@ -26,14 +26,19 @@ ratio_value_default = st.session_state.get('ratio_value', 1.0)
 
 dose_mg_kg = st.number_input("設定用量 (mg/kg)", value=dose_mg_kg_value, step=0.01)
 
-# 薬用量/製剤量比の単位選択
-unit_options = ["mg/g", "mg/mL", "%"]
-try:
-    default_index = unit_options.index(ratio_unit_value)
-except ValueError:
-    default_index = 0
-ratio_unit = st.selectbox("薬用量/製剤量比の単位", unit_options, index=default_index)
-ratio_value = st.number_input(f"薬用量/製剤量比 ({ratio_unit})", value=ratio_value_default, step=0.01, min_value=0.0)
+# 薬用量/製剤量比の入力と単位選択を横並びに
+ratio_col1, ratio_col2 = st.columns([2, 3])
+
+with ratio_col1:
+    ratio_value = st.number_input("薬用量/製剤量比", value=ratio_value_default, step=0.01, min_value=0.0)
+
+with ratio_col2:
+    unit_options = ["mg/g", "mg/mL", "%"]
+    try:
+        default_index = unit_options.index(ratio_unit_value)
+    except ValueError:
+        default_index = 0
+    ratio_unit = st.radio("単位", unit_options, index=default_index, horizontal=True)
 
 total_dose = weight * dose_mg_kg
 
