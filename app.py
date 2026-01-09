@@ -10,7 +10,7 @@ st.subheader("よく使う薬剤")
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("アドレナリン筋注(0.01mg/kg, アナフィラキシー用)"):
+    if st.button("アドレナリン筋注(0.01mg/kg)"):
         st.session_state['dose_mg_kg'] = 0.01
         st.session_state['ratio_unit'] = "mg/mL"
         st.session_state['ratio_value'] = 1.0  # 1mg/1mL(1:1000)製剤
